@@ -1,0 +1,35 @@
+[project]
+name = "financehelper"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "black>=26.1.0",
+    "dotenv>=0.9.9",
+    "fastapi>=0.128.0",
+    "isort>=7.0.0",
+    "jinja2>=3.1.6",
+    "langchain>=1.2.7",
+    "langchain-anthropic>=1.3.1",
+    "langchain-classic>=1.0.1",
+    "langchain-community>=0.4.1",
+    "langchain-openai>=1.1.7",
+    "langchain-pinecone>=0.2.13",
+    "langchain-tavily>=0.2.17",
+    "nltk>=3.9.2",
+    "pandas>=2.3.3",
+    "pillow>=12.1.0",
+    "pymupdf>=1.26.7",
+    "pypdf>=6.6.2",
+    "pytesseract>=0.3.13",
+    "python-dotenv>=1.2.1",
+    "streamlit>=1.53.1",
+    "tavily-python>=0.7.19",
+    "tiktoken>=0.12.0",
+    "tqdm>=4.67.1",
+    "uvicorn>=0.40.0",
+]
+
+[tool.setuptools]
+py-modules = []
