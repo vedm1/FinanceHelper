@@ -14,6 +14,46 @@ from typing import List
 import pandas as pd
 import xml.etree.ElementTree as ET
 import json
+import re
+
+
+def is_quality_text(text: str, min_length: int = 50, min_alpha_ratio: float = 0.6) -> bool:
+    """
+    Check if OCR text is high enough quality to be useful.
+
+    Filters out:
+    - Text that's too short (likely logos, icons)
+    - Text with too few alphabetic characters (garbage OCR)
+    - Text that's mostly symbols/numbers without context
+    """
+    if not text or not text.strip():
+        return False
+
+    cleaned = text.strip()
+
+    # Must be at least min_length characters
+    if len(cleaned) < min_length:
+        return False
+
+    # Count alphabetic characters
+    alpha_chars = sum(1 for c in cleaned if c.isalpha())
+    total_chars = len(cleaned.replace(" ", "").replace("\n", ""))
+
+    if total_chars == 0:
+        return False
+
+    # Must have at least min_alpha_ratio alphabetic characters
+    alpha_ratio = alpha_chars / total_chars
+    if alpha_ratio < min_alpha_ratio:
+        return False
+
+    # Must have at least 3 words
+    words = cleaned.split()
+    if len(words) < 3:
+        return False
+
+    return True
+
 
 class MultiFormatLoader:
     def __init__(self, directory_path: str):
@@ -50,18 +90,34 @@ class MultiFormatLoader:
         loader = PyMuPDFLoader(file_path)
         docs = loader.load()
 
+        # Track which pages have sufficient text
+        pages_with_text = set()
+
         for doc in docs:
             doc.metadata['file_type'] = 'pdf'
             doc.metadata['source'] = file_path
 
-        self.documents.extend(docs)
-        self._extract_pdf_images(file_path)
+            # If page has meaningful text, mark it
+            if len(doc.page_content.strip()) > 100:
+                pages_with_text.add(doc.metadata.get('page', 0))
 
-    def _extract_pdf_images(self, file_path: str):
-        """Extract and OCR images from PDF"""
+        self.documents.extend(docs)
+
+        # Only OCR images from pages that lack text (scanned pages)
+        self._extract_pdf_images(file_path, skip_pages=pages_with_text)
+
+    def _extract_pdf_images(self, file_path: str, skip_pages: set = None):
+        """Extract and OCR images only from pages lacking text (scanned pages)."""
+        if skip_pages is None:
+            skip_pages = set()
+
         doc = fitz.open(file_path)
 
         for page_num in range(len(doc)):
+            # Skip pages that already have text extracted
+            if page_num in skip_pages:
+                continue
+
             page = doc[page_num]
             image_list = page.get_images()
 
@@ -74,7 +130,8 @@ class MultiFormatLoader:
                     image = Image.open(io.BytesIO(image_bytes))
                     text = pytesseract.image_to_string(image)
 
-                    if text.strip():
+                    # Only add if text passes quality check
+                    if is_quality_text(text):
                         self.documents.append(Document(
                             page_content=text,
                             metadata={
@@ -201,7 +258,8 @@ class MultiFormatLoader:
             image = Image.open(file_path)
             text = pytesseract.image_to_string(image)
 
-            if text.strip():
+            # Only add if text passes quality check
+            if is_quality_text(text):
                 self.documents.append(Document(
                     page_content=text,
                     metadata={

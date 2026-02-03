@@ -7,7 +7,8 @@ from langchain_core.indexing import DocumentIndex
 from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from typing import Any, Dict, List
+from pinecone import Pinecone
+from typing import List
 
 from MultiFormatLoader import MultiFormatLoader
 from logger import (Colors, log_info, log_error, log_header, log_success, log_warning)
@@ -46,9 +47,26 @@ async def index_documents_async(documents: List[Document], batch_size: int = 50)
         log_warning(f"Processed {successful}/{len(batches)} batches successfully")
 
 
+def clear_pinecone_index():
+    """Delete all vectors from the Pinecone index."""
+    log_header("Clearing Pinecone Index")
+
+    pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+    index = pc.Index(os.getenv("INDEX_NAME"))
+
+    # Delete all vectors by using delete with delete_all
+    index.delete(delete_all=True)
+
+    log_success("Pinecone index cleared successfully")
+
+
 async def ingestion():
 
     log_header(f"Ingestion started on {datetime.datetime.now()}\n\n")
+
+    # Clear existing vectors to prevent duplicates
+    clear_pinecone_index()
+
     log_info(f"Loading documents...")
 
     loader = MultiFormatLoader("./documents/")
