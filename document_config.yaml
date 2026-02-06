@@ -1,0 +1,207 @@
+# Document Metadata Configuration
+# This file maps documents to their metadata for graph indexing
+
+# Default values applied when no specific match is found
+defaults:
+  owner: "unknown"
+  company: null
+  type: "document"
+  category: "uncategorized"
+  year: null
+
+# Document mappings - supports exact filenames or glob patterns
+documents:
+  # Knowledge Base Documents
+  "brand_share_use_case_scenario.md":
+    owner: "Euromonitor"
+    type: "Use Case Document"
+    category: "Brand Shares"
+    description: "Brand Shares Use Case"
+
+  "brand_shares_prd.md":
+    owner: "Euromonitor"
+    type: "Product Requirement Document"
+    category: "Brand Shares"
+    description: "Brand Shares PRD"
+
+  "BrandSharesFeature.txt":
+    owner: "Euromonitor"
+    type: "Feature Document"
+    category: "Brand Shares"
+    description: "Brand Shares Features"
+
+  "data_types.md":
+    owner: "Euromonitor"
+    type: "Data Types Document"
+    category: "Data Types and Measure Types"
+    description: "Data Types Description for Brand Shares and Market Sizes"
+
+  "market_sizes_data.md":
+    owner: "Euromonitor"
+    type: "Market Size Document"
+    category: "Market Sizes"
+    description: "Market Sizes Description"
+
+  "per_capita_types.md":
+    owner: "Euromonitor"
+    type: "Per Capita Document"
+    category: "Data Types and Measure Types"
+    description: "Measure type for Brand Shares and Market Sizes"
+
+  "stats_grid_interaction.md":
+    owner: "Euromonitor"
+    type: "Stats Grid Interactions"
+    category: "Statistics Grid"
+    description: "Statistics Grid Interactions for Brand Shares, Market Sizes"
+
+  "unit_price_types.md":
+    owner: "Euromonitor"
+    type: "Unit Price Document"
+    category: "Data Types and Measure Types"
+    description: "Measure type for Brand Shares and Market Sizes"
+
+  "statistics_api.json":
+    owner: "Euromonitor"
+    type: "API Document"
+    category: "Statistics Grid"
+    description: "API Contract for Statistics Grid that has Market Size, Brand Share, "
+
+
+
+#  "SBIN_2021_2022.pdf":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Annual Report"
+#    category: "banking"
+#    year: 2022
+#
+#  "SBIN_2022_2023.pdf":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Annual Report"
+#    category: "banking"
+#    year: 2023
+#
+#  "SBIN_2023_2024.pdf":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Annual Report"
+#    category: "banking"
+#    year: 2024
+#
+#  "SBIN_2024_2025.pdf":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Annual Report"
+#    category: "banking"
+#    year: 2025
+#
+#  # Financial Results XML - Consolidated (C)
+#  "Q4_2019_C.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2019
+#    quarter: "Q4"
+#    consolidated: true
+#
+#  "Q4_2020_C.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2020
+#    quarter: "Q4"
+#    consolidated: true
+#
+#  "Q4_2021_C.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2021
+#    quarter: "Q4"
+#    consolidated: true
+#
+#  "Q4_2022_C.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2022
+#    quarter: "Q4"
+#    consolidated: true
+#
+#  "Q4_2023_C.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2023
+#    quarter: "Q4"
+#    consolidated: true
+#
+#  "Q4_2024_C.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2024
+#    quarter: "Q4"
+#    consolidated: true
+#
+#  # Financial Results XML - Non-Consolidated (NC)
+#  "Q4_2019_NC.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2019
+#    quarter: "Q4"
+#    consolidated: false
+#
+#  "Q4_2020_NC.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2020
+#    quarter: "Q4"
+#    consolidated: false
+#
+#  "Q4_2021_NC.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2021
+#    quarter: "Q4"
+#    consolidated: false
+#
+#  "Q4_2022_NC.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2022
+#    quarter: "Q4"
+#    consolidated: false
+#
+#  "Q4_2023_NC.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2023
+#    quarter: "Q4"
+#    consolidated: false
+#
+#  "Q4_2024_NC.xml":
+#    owner: "public"
+#    company: "State Bank of India"
+#    type: "Quarterly Results"
+#    category: "banking"
+#    year: 2024
+#    quarter: "Q4"
+#    consolidated: false

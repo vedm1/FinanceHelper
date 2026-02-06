@@ -13,6 +13,7 @@ develop-eggs/
 dist/
 downloads/
 documents/
+cache_documents/
 eggs/
 .eggs/
 lib/
@@ -215,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Frontend
+frontend/node_modules/
+frontend/dist/

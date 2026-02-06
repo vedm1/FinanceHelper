@@ -1,7 +1,7 @@
 import base64
 
 from langchain_core.documents import Document
-from langchain_community.document_loaders import (PyMuPDFLoader, TextLoader, CSVLoader)
+from langchain_community.document_loaders import (PyMuPDFLoader, TextLoader, CSVLoader, JSONLoader)
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter
@@ -80,10 +80,36 @@ class MultiFormatLoader:
                         self._load_xml(str(file_path))
                     elif ext in [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"]:
                         self._load_image(str(file_path))
+                    elif ext == ".md":
+                        self._load_md(str(file_path))
+                    elif ext == ".json":
+                        self._load_json(str(file_path))
                 except Exception as e:
                     print(f"Error loading {file_path}: {e}")
 
         return self.documents
+
+    def _load_json(self, file_path: str):
+        """Load json proper json structure"""
+        loader = JSONLoader(file_path, jq_schema='.', text_content=False)
+        docs = loader.load()
+
+        for doc in docs:
+            doc.metadata['file_type'] = 'json'
+            doc.metadata['source'] = file_path
+
+        self.documents.extend(docs)
+
+    def _load_md(self, file_path: str):
+        """Load Markdown files with text"""
+        loader = TextLoader(file_path)
+        docs = loader.load()
+
+        for doc in docs:
+            doc.metadata['file_type'] = 'md'
+            doc.metadata['source'] = file_path
+
+        self.documents.extend(docs)
 
     def _load_pdf(self, file_path: str):
         """Load pdf with text and images"""

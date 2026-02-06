@@ -11,11 +11,12 @@ from pinecone import Pinecone
 from typing import List
 
 from MultiFormatLoader import MultiFormatLoader
-from logger import (Colors, log_info, log_error, log_header, log_success, log_warning)
+from graph_manager import GraphManager
+from logger import (log_info, log_error, log_header, log_success, log_warning)
 
 load_dotenv(override=True)
 
-embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"), chunk_size=50)
+embeddings = OpenAIEmbeddings(model="text-embedding-3-large", openai_api_key=os.getenv("OPENAI_API_KEY"), chunk_size=50)
 
 vectorstore = PineconeVectorStore(index_name=os.getenv("INDEX_NAME"), embedding=embeddings)
 
@@ -55,9 +56,37 @@ def clear_pinecone_index():
     index = pc.Index(os.getenv("INDEX_NAME"))
 
     # Delete all vectors by using delete with delete_all
-    index.delete(delete_all=True)
+    try:
+        index.delete(delete_all=True, namespace="")
+    except Exception:
+        pass  # Index already empty
 
     log_success("Pinecone index cleared successfully")
+
+
+def populate_graph(documents: List[Document]):
+    """Populate Neo4j graph with document metadata."""
+    log_header("Populating Knowledge Graph")
+
+    with GraphManager() as gm:
+        # Clear existing graph and create indexes
+        gm.clear_graph()
+        gm.create_indexes()
+
+        # Get unique document sources
+        unique_sources = set()
+        for doc in documents:
+            source = doc.metadata.get("source")
+            if source:
+                unique_sources.add(source)
+
+        log_info(f"Adding {len(unique_sources)} documents to graph")
+
+        for source in unique_sources:
+            gm.add_document(source)
+
+        stats = gm.get_graph_stats()
+        log_success(f"Graph populated: {stats}")
 
 
 async def ingestion():
@@ -122,6 +151,9 @@ async def ingestion():
 
 
     await index_documents_async(splits, batch_size=200)
+
+    # Populate the knowledge graph with document metadata
+    populate_graph(all_documents)
 
     log_header("Ingestion finished!")
 
