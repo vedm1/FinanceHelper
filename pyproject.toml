@@ -17,6 +17,7 @@ dependencies = [
     "langchain-openai>=1.1.7",
     "langchain-pinecone>=0.2.13",
     "langchain-tavily>=0.2.17",
+    "langchainhub>=0.1.21",
     "langgraph>=1.0.7",
     "neo4j>=6.1.0",
     "nltk>=3.9.2",
@@ -25,6 +26,7 @@ dependencies = [
     "pymupdf>=1.26.7",
     "pypdf>=6.6.2",
     "pytesseract>=0.3.13",
+    "pytest>=9.0.2",
     "python-dotenv>=1.2.1",
     "pyyaml>=6.0.3",
     "streamlit>=1.53.1",
@@ -35,5 +37,5 @@ dependencies = [
     "uvicorn>=0.40.0",
 ]
 
-[tool.setuptools]
-py-modules = []
+[tool.setuptools.packages.find]
+where = ["."]

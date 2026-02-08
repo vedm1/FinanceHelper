@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from backend.core import run_llm
+from backend.core import run_langgraph
 from backend.schemas import (
     QueryRequest,
     QueryResponse,
@@ -43,7 +43,7 @@ app.add_middleware(
 @app.post("/api/query", response_model=QueryResponse)
 async def query(req: QueryRequest):
     try:
-        result = run_llm(
+        result = run_langgraph(
             query=req.query,
             owner=req.owner,
             company=req.company,
@@ -55,20 +55,17 @@ async def query(req: QueryRequest):
 
     answer = str(result.get("answer", "")).strip() or "(No answer received)"
 
-    # Flatten nested context lists and extract source info
+    # Extract unique sources from the flat document list
     seen = set()
     sources = []
-    for doc_list in result.get("context", []):
-        if not isinstance(doc_list, list):
-            doc_list = [doc_list]
-        for doc in doc_list:
-            source = getattr(doc, "metadata", {}).get("source", "Unknown")
-            if source not in seen:
-                seen.add(source)
-                sources.append(SourceDoc(
-                    source=source,
-                    content=getattr(doc, "page_content", "")[:500],
-                ))
+    for doc in result.get("context", []):
+        source = getattr(doc, "metadata", {}).get("source", "Unknown")
+        if source not in seen:
+            seen.add(source)
+            sources.append(SourceDoc(
+                source=source,
+                content=getattr(doc, "page_content", "")[:500],
+            ))
 
     return QueryResponse(answer=answer, sources=sources)
 

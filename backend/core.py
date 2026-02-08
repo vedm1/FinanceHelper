@@ -156,6 +156,44 @@ def run_llm(
 
     return {"answer": answer, "context": context_docs}
 
+def run_langgraph(
+    query: str,
+    owner: Optional[str] = None,
+    company: Optional[str] = None,
+    category: Optional[str] = None,
+    year: Optional[int] = None,
+) -> Dict[str, Any]:
+    """
+    Run the LangGraph RAG pipeline: Retrieve → Grade Documents → (Web Search) → Generate.
+
+    Args:
+        query: The user's question
+        owner: Filter to documents belonging to this owner
+        company: Filter to documents from this company
+        category: Filter to documents in this category
+        year: Filter to documents from this year
+
+    Returns:
+        Dictionary containing:
+            - answer: The generated answer
+            - context: List of retrieved documents
+    """
+    from graph.graph import graph as langgraph_app
+
+    result = langgraph_app.invoke({
+        "question": query,
+        "owner": owner,
+        "company": company,
+        "category": category,
+        "year": year,
+    })
+
+    return {
+        "answer": result.get("generation", "(No answer received)"),
+        "context": result.get("documents", []),
+    }
+
+
 if __name__ == '__main__':
     # Test with owner filter
     print("=" * 70)
